@@ -15,12 +15,12 @@ See also [Fody usage](https://github.com/Fody/Fody#usage).
 
 Install the [BasicFodyAddin.Fody NuGet package](https://nuget.org/packages/BasicFodyAddin.Fody/) and update the [Fody NuGet package](https://nuget.org/packages/Fody/):
 
-```
+```powershell
+PM> Install-Package Fody
 PM> Install-Package BasicFodyAddin.Fody
-PM> Update-Package Fody
 ```
 
-The `Update-Package Fody` is required since NuGet always defaults to the oldest, and most buggy, version of any dependency.
+The `Install-Package Fody` is required since NuGet always defaults to the oldest, and most buggy, version of any dependency.
 
 
 ### Add to FodyWeavers.xml
@@ -67,9 +67,11 @@ This project has a NuGet dependency on [FodyHelpers](https://www.nuget.org/packa
 
 This project must target and `netstandard2.0` (for .NET Framework `net46` or above) so that it can target `msbuild.exe` or `dotnet build`.
 
+
 #### Output of the project
 
 It outputs a file named `BasicFodyAddin.Fody`. The '.Fody' suffix is necessary to be picked up by Fody at compile time.
+
 
 #### ModuleWeaver
 
@@ -77,9 +79,11 @@ ModuleWeaver.cs is where the target assembly is modified. Fody will pick up this
 
 `ModuleWeaver` has a base class of `BaseModuleWeaver` which exists in the [FodyHelpers NuGet](https://www.nuget.org/packages/FodyHelpers/).
 
+
 ##### BaseModuleWeaver.Execute
 
 Called to perform the manipulation of the module. The current module can be accessed and manipulated via `BaseModuleWeaver.ModuleDefinition`.
+
 
 ##### BaseModuleWeaver.GetAssembliesForScanning
 
@@ -87,28 +91,31 @@ Called by Fody when it is building up a type cache for lookups. This method shou
 
 To use this type cache, a `ModuleWeaver` can call `BaseModuleWeaver.FindType` within `Execute` method. For example in this project the following is called:
 
-```
+```csharp
 var objectRef = ModuleDefinition.ImportReference(FindType("System.Object"));
 ```
+
 
 ##### BaseModuleWeaver.ShouldCleanReference
 
 When `BasicFodyAddin.dll` is referenced by a consuming project, it is only for the purposes configuring the weaving via attributes. As such, it is not required at runtime. With this in mind `BaseModuleWeaver` has an opt in feature to remove the reference, meaning the target weaved application does not need `BasicFodyAddin.dll` at runtime. This feature can be opted in to via the following code in `ModuleWeaver`:
 
-```
+```csharp
 public override bool ShouldCleanReference => true;
 ```
+
 
 ##### Other BaseModuleWeaver Members
 
 `BaseModuleWeaver` has a number of other members for logging and extensibility:  
 https://github.com/Fody/Fody/blob/master/FodyHelpers/BaseModuleWeaver.cs
 
+
 #### Resultant injected code
 
 In this case a new type is being injected into the target assembly that looks like this.
 
-```
+```csharp
 public class Hello
 {
     public string World()
@@ -120,9 +127,11 @@ public class Hello
 
 See [ModuleWeaver](https://github.com/Fody/Fody/wiki/ModuleWeaver) for more details.
 
+
 ### AssemblyToProcess Project
 
 A target assembly to process and then validate with unit tests.
+
 
 ### Tests Project
 
@@ -136,7 +145,7 @@ FodyHelpers contains a utility [WeaverTestHelper](https://github.com/Fody/Fody/b
 
 A test can then be run as follows:
 
-```
+```csharp
 public class WeaverTests
 {
     static TestResult testResult;
