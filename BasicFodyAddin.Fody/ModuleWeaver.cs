@@ -5,8 +5,11 @@ using Mono.Cecil.Rocks;
 using Mono.Cecil.Cil;
 using Fody;
 
+#region ModuleWeaver
+
 public class ModuleWeaver: BaseModuleWeaver
 {
+    #region Execute
     public override void Execute()
     {
         var ns = GetNamespace();
@@ -19,12 +22,15 @@ public class ModuleWeaver: BaseModuleWeaver
         ModuleDefinition.Types.Add(newType);
         LogInfo("Added type 'Hello' with method 'World'.");
     }
+    #endregion
 
+    #region GetAssembliesForScanning
     public override IEnumerable<string> GetAssembliesForScanning()
     {
         yield return "netstandard";
         yield return "mscorlib";
     }
+    #endregion
 
     string GetNamespace()
     {
@@ -57,6 +63,10 @@ public class ModuleWeaver: BaseModuleWeaver
         processor.Emit(OpCodes.Ret);
         newType.Methods.Add(method);
     }
+    #region ShouldCleanReference
 
     public override bool ShouldCleanReference => true;
+
+    #endregion
 }
+#endregion

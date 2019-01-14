@@ -79,88 +79,14 @@ ModuleWeaver.cs is where the target assembly is modified. Fody will pick up this
 
 `ModuleWeaver` has a base class of `BaseModuleWeaver` which exists in the [FodyHelpers NuGet](https://www.nuget.org/packages/FodyHelpers/).
 
-<!-- snippet: ModuleWeaver -->
-```cs
-public class ModuleWeaver: BaseModuleWeaver
-{
-    public override void Execute()
-    {
-        var ns = GetNamespace();
-        var newType = new TypeDefinition(ns, "Hello", TypeAttributes.Public, TypeSystem.ObjectReference);
-
-        AddConstructor(newType);
-
-        AddHelloWorld(newType);
-
-        ModuleDefinition.Types.Add(newType);
-        LogInfo("Added type 'Hello' with method 'World'.");
-    }
-
-    public override IEnumerable<string> GetAssembliesForScanning()
-    {
-        yield return "netstandard";
-        yield return "mscorlib";
-    }
-
-    string GetNamespace()
-    {
-        var attributes = ModuleDefinition.Assembly.CustomAttributes;
-        var namespaceAttribute = attributes.FirstOrDefault(x => x.AttributeType.FullName == "NamespaceAttribute");
-        if (namespaceAttribute == null)
-        {
-            return null;
-        }
-        attributes.Remove(namespaceAttribute);
-        return (string) namespaceAttribute.ConstructorArguments.First().Value;
-    }
-
-    void AddConstructor(TypeDefinition newType)
-    {
-        var method = new MethodDefinition(".ctor", MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName, TypeSystem.VoidReference);
-        var objectConstructor = ModuleDefinition.ImportReference(TypeSystem.ObjectDefinition.GetConstructors().First());
-        var processor = method.Body.GetILProcessor();
-        processor.Emit(OpCodes.Ldarg_0);
-        processor.Emit(OpCodes.Call, objectConstructor);
-        processor.Emit(OpCodes.Ret);
-        newType.Methods.Add(method);
-    }
-
-    void AddHelloWorld(TypeDefinition newType)
-    {
-        var method = new MethodDefinition("World", MethodAttributes.Public, TypeSystem.StringReference);
-        var processor = method.Body.GetILProcessor();
-        processor.Emit(OpCodes.Ldstr, "Hello World");
-        processor.Emit(OpCodes.Ret);
-        newType.Methods.Add(method);
-    }
-
-    public override bool ShouldCleanReference => true;
-
-}
-```
-<!-- endsnippet -->
+snippet: ModuleWeaver
 
 
 ##### BaseModuleWeaver.Execute
 
 Called to perform the manipulation of the module. The current module can be accessed and manipulated via `BaseModuleWeaver.ModuleDefinition`.
 
-<!-- snippet: Execute -->
-```cs
-public override void Execute()
-{
-    var ns = GetNamespace();
-    var newType = new TypeDefinition(ns, "Hello", TypeAttributes.Public, TypeSystem.ObjectReference);
-
-    AddConstructor(newType);
-
-    AddHelloWorld(newType);
-
-    ModuleDefinition.Types.Add(newType);
-    LogInfo("Added type 'Hello' with method 'World'.");
-}
-```
-<!-- endsnippet -->
+snippet: Execute
 
 
 ##### BaseModuleWeaver.GetAssembliesForScanning
@@ -169,26 +95,14 @@ Called by Fody when it is building up a type cache for lookups. This method shou
 
 To use this type cache, a `ModuleWeaver` can call `BaseModuleWeaver.FindType` within `Execute` method.
 
-<!-- snippet: GetAssembliesForScanning -->
-```cs
-public override IEnumerable<string> GetAssembliesForScanning()
-{
-    yield return "netstandard";
-    yield return "mscorlib";
-}
-```
-<!-- endsnippet -->
+snippet: GetAssembliesForScanning
 
 
 ##### BaseModuleWeaver.ShouldCleanReference
 
 When `BasicFodyAddin.dll` is referenced by a consuming project, it is only for the purposes configuring the weaving via attributes. As such, it is not required at runtime. With this in mind `BaseModuleWeaver` has an opt in feature to remove the reference, meaning the target weaved application does not need `BasicFodyAddin.dll` at runtime. This feature can be opted in to via the following code in `ModuleWeaver`:
 
-<!-- snippet: ShouldCleanReference -->
-```cs
-public override bool ShouldCleanReference => true;
-```
-<!-- endsnippet -->
+snippet: ShouldCleanReference
 
 
 ##### Other BaseModuleWeaver Members
@@ -231,29 +145,7 @@ FodyHelpers contains a utility [WeaverTestHelper](https://github.com/Fody/Fody/b
 
 A test can then be run as follows:
 
-<!-- snippet: WeaverTests -->
-```cs
-public class WeaverTests
-{
-    static TestResult testResult;
-
-    static WeaverTests()
-    {
-        var weavingTask = new ModuleWeaver();
-        testResult = weavingTask.ExecuteTestRun("AssemblyToProcess.dll");
-    }
-
-    [Fact]
-    public void ValidateHelloWorldIsInjected()
-    {
-        var type = testResult.Assembly.GetType("TheNamespace.Hello");
-        var instance = (dynamic)Activator.CreateInstance(type);
-
-        Assert.Equal("Hello World", instance.World());
-    }
-}
-```
-<!-- endsnippet -->
+snippet: WeaverTests
 
 By default `ExecuteTestRun` will perform a [PeVerify](https://docs.microsoft.com/en-us/dotnet/framework/tools/peverify-exe-peverify-tool) on the resultant assembly
 

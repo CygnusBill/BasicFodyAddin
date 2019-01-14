@@ -2,7 +2,7 @@
 using Fody;
 using Xunit;
 #pragma warning disable 618
-
+#region WeaverTests
 public class WeaverTests
 {
     static TestResult testResult;
@@ -22,3 +22,4 @@ public class WeaverTests
         Assert.Equal("Hello World", instance.World());
     }
 }
+#endregion
