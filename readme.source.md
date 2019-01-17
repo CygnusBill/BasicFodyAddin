@@ -107,7 +107,7 @@ snippet: ShouldCleanReference
 
 ##### Other BaseModuleWeaver Members
 
-`BaseModuleWeaver` has a number of other members for logging and extensibility:  
+`BaseModuleWeaver` has a number of other members for logging and extensibility:
 https://github.com/Fody/Fody/blob/master/FodyHelpers/BaseModuleWeaver.cs
 
 
