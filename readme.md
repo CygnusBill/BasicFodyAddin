@@ -138,6 +138,7 @@ public class ModuleWeaver: BaseModuleWeaver
 
 }
 ```
+<sup>[snippet source](/BasicFodyAddin.Fody/ModuleWeaver.cs#L8-L72)</sup>
 <!-- endsnippet -->
 
 
@@ -160,6 +161,7 @@ public override void Execute()
     LogInfo("Added type 'Hello' with method 'World'.");
 }
 ```
+<sup>[snippet source](/BasicFodyAddin.Fody/ModuleWeaver.cs#L12-L25)</sup>
 <!-- endsnippet -->
 
 
@@ -177,6 +179,7 @@ public override IEnumerable<string> GetAssembliesForScanning()
     yield return "mscorlib";
 }
 ```
+<sup>[snippet source](/BasicFodyAddin.Fody/ModuleWeaver.cs#L27-L33)</sup>
 <!-- endsnippet -->
 
 
@@ -188,12 +191,13 @@ When `BasicFodyAddin.dll` is referenced by a consuming project, it is only for t
 ```cs
 public override bool ShouldCleanReference => true;
 ```
+<sup>[snippet source](/BasicFodyAddin.Fody/ModuleWeaver.cs#L66-L70)</sup>
 <!-- endsnippet -->
 
 
 ##### Other BaseModuleWeaver Members
 
-`BaseModuleWeaver` has a number of other members for logging and extensibility:  
+`BaseModuleWeaver` has a number of other members for logging and extensibility:
 https://github.com/Fody/Fody/blob/master/FodyHelpers/BaseModuleWeaver.cs
 
 
@@ -253,6 +257,7 @@ public class WeaverTests
     }
 }
 ```
+<sup>[snippet source](/Tests/WeaverTests.cs#L5-L25)</sup>
 <!-- endsnippet -->
 
 By default `ExecuteTestRun` will perform a [PeVerify](https://docs.microsoft.com/en-us/dotnet/framework/tools/peverify-exe-peverify-tool) on the resultant assembly

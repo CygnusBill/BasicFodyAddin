@@ -6,7 +6,7 @@ public class DocoUpdater
     [Fact]
     public void Run()
     {
-        var root = GitRepoDirectoryFinder.Find();
-        DirectorySourceMarkdownProcessor.Run(root);
+        var root = GitRepoDirectoryFinder.FindForFilePath();
+        GitHubMarkdownProcessor.Run(root);
     }
 }
