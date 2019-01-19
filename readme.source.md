@@ -65,7 +65,7 @@ This project has a NuGet dependency on [FodyHelpers](https://www.nuget.org/packa
 
 #### Target Frameworks
 
-This project must target and `netstandard2.0` (for .NET Framework `net46` or above) so that it can target [msbuild.exe](https://docs.microsoft.com/en-us/visualstudio/msbuild/msbuild) and [dotnet build](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-build).
+This project must target `net46` for [msbuild.exe](https://docs.microsoft.com/en-us/visualstudio/msbuild/msbuild) support, and `netstandard2.0` for [dotnet build](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-build) support.
 
 
 #### Output of the project
